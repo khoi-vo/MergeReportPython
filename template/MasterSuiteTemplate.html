@@ -1,0 +1,183 @@
+<html>
+   <style>
+    img.beneath 
+    {
+	      float: left;
+	      margin: 10px;
+    }
+    img.beneathr 
+    {
+	      float: right;
+	      margin: 10px;
+    }
+    #table1
+    {
+        border-collapse: separate;
+        border-spacing: 2px;
+    }
+    .hoverRow
+    {
+        transition: transform 0.5s;
+    }
+    .hoverRow:hover
+    {
+        background-color: #AED6F1;
+        transform: scale(1.01);
+    }
+   </style>
+   <head>
+   <title>Cheetah Testing Report</title>
+   <link href="./lib/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+   <link href="./lib/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+   <script src="./lib/js/jquery-3.4.1-min.js" type="text/javascript"></script>  
+   <script src="./lib/js/bootstrap.min.js" type="text/javascript"></script>
+   <script src="./lib/js/loader.js" type="text/javascript"></script>
+   <script type = "text/javascript" id = "scriptChartTotal"></script>
+   <script type = "text/javascript" id = "scriptChartCFMRegression"></script>
+   <script type = "text/javascript" id = "scriptChartCFMSanity"></script>
+   <script type = "text/javascript" id = "scriptChartSalesSanity"></script>
+   <script type = "text/javascript" id = "scriptChartSalesRegression"></script>
+   </head>
+   <body bgcolor='#DCDCDC'>
+      <div class="jumbotron text-center">
+      <img alt="CHEETAH" class="beneath" src="./lib/image/cheetah_251x51.png"/>
+      <img alt="CHEETAH" class="beneathr" src="./lib/image/lufthansa_300.png"/>
+      <h1 style="text-align: center;">
+        <strong>CHEETAH</strong>
+      </h1>
+      </div>
+      <table border= '1' width='50%' align= 'center' bordercolor='black' id="table1">
+      <tr bgcolor='white' >
+         <th bgcolor='#99CCFF' align = 'left'><font size='3.5' face='Calibri' color = 'black' >Date:</th>
+         <td colspan=6 id='date'>Sat Mar 21 15:14:03 UTC 2020</td>
+      </tr>
+      <tr bgcolor='white'>
+         <th bgcolor='#99CCFF' align = 'left'><font size='3.5' face='Calibri' color = 'black'>Test environments details:</th>
+         <td colspan=6><a href= ../logs/ini.html>Click here</a></td>
+      </tr>
+      <tr bgcolor='#C0C0C0'>
+         <th style="text-align: center;" bgcolor='#C0C0C0'><font size='3.5' face='Calibri' color = 'black'>Testset Name</th>
+         <th style="text-align: center;" bgcolor='#C0C0C0'><font size='3.5' face='Calibri' color = 'black'>No of Test Cases</th>
+         <th style="text-align: center;" bgcolor='#C0C0C0'><font size='3.5' face='Calibri' color = 'black'>Pass</th>
+         <th style="text-align: center;" bgcolor='#C0C0C0'><font size='3.5' face='Calibri' color = 'black'>Fail</th>
+         <th style="text-align: center;" bgcolor='#C0C0C0'><font size='3.5' face='Calibri' color = 'black'>Test Cases not executed</th>
+         <th style="text-align: center;" bgcolor='#C0C0C0'><font size='3.5' face='Calibri' color = 'black'>%Pass</th>
+         <th style="text-align: center;" bgcolor='#C0C0C0'><font size='3.5' face='Calibri' color = 'black'>%Fail</th>
+      </tr>
+      <tr class="hoverRow" bgcolor='#FFFFFF' id= "testset1">
+         <th style="text-align: center;">
+            <font size='3.5' face='Calibri' color = 'black' align = 'center'>
+               <a href=SalesSanity.html>
+               <h5>
+               SalesSanity
+               </h5>
+               </a>    
+            </font>
+         </th>
+         <th style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align = 'center'>16</font></th>
+         <th style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align = 'center'>7</font></th>
+         <th style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align = 'center'>9</font></th>
+         <th style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align = 'center'>0</font></th>
+         <th bgcolor='#00FA9A' style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align='center' >43%</font></th>
+         <th bgcolor='#F08080' style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align='center' >57%</font></th>
+      </tr>
+      <tr class="hoverRow" bgcolor='#FFFFFF' id= "testset2">
+        <th style="text-align: center;">
+           <font size='3.5' face='Calibri' color = 'black' align = 'center'>
+              <a href=CFMSanity.html>
+              <h5>
+              CFMSanity
+              </h5>
+              </a>    
+           </font>
+        </th>
+        <th style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align = 'center'>16</font></th>
+        <th style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align = 'center'>7</font></th>
+        <th style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align = 'center'>9</font></th>
+        <th style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align = 'center'>0</font></th>
+        <th bgcolor='#00FA9A' style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align='center' >43%</font></th>
+        <th bgcolor='#F08080' style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align='center' >57%</font></th>
+     </tr>
+     <tr class="hoverRow" bgcolor='#FFFFFF' id= "testset3">
+        <th style="text-align: center;">
+           <font size='3.5' face='Calibri' color = 'black' align = 'center'>
+              <a href=SalesRegression.html>
+              <h5>
+              SalesRegression
+              </h5>
+              </a>    
+           </font>
+        </th>
+        <th style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align = 'center'>16</font></th>
+        <th style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align = 'center'>7</font></th>
+        <th style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align = 'center'>9</font></th>
+        <th style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align = 'center'>0</font></th>
+        <th bgcolor='#00FA9A' style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align='center' >43%</font></th>
+        <th bgcolor='#F08080' style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align='center' >57%</font></th>
+     </tr>
+     <tr class="hoverRow" bgcolor='#FFFFFF' id= "testset4">
+        <th style="text-align: center;">
+           <font size='2.5' face='Calibri' color = 'black' align = 'center'>
+              <a href=CFMRegression.html>
+              <h5>
+              CFMRegression
+              </h5>
+              </a>    
+           </font>
+        </th>
+        <th style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align = 'center'>16</font></th>
+        <th style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align = 'center'>7</font></th>
+        <th style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align = 'center'>9</font></th>
+        <th style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align = 'center'>0</font></th>
+        <th bgcolor='#00FA9A' style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align='center' >43%</font></th>
+        <th bgcolor='#F08080' style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align='center' >57%</font></th>
+     </tr>
+      <tr class="hoverRow" bgcolor='#99CCFF' id='total'>
+         <font size='2.0' face='Calibri' color = 'black' align = 'center'>
+            <th>
+               <h5 align = 'center'>
+               <strong>
+                TOTAL
+               </strong>
+               </h5>
+            </th>
+            <th style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align = 'center'>16</font></th>
+            <th style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align = 'center'>7</font></th>
+            <th style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align = 'center'>9</font></th>
+            <th style="text-align: center;"><font size='3.5' face='Calibri' color = 'black' align = 'center'>0</font></th>
+            <th style="text-align: center;" bgcolor='#00FA9A'><font size='3.5' face='Calibri' color = 'black' align='center' >43%</font></th>
+            <th style="text-align: center;" bgcolor='#F08080'><font size='3.5' face='Calibri' color = 'black' align='center' >57%</font></th>
+         </font>
+      </tr>
+      </table>
+      <div class="container">
+          <div class="row">
+                <div style="margin: auto;" id="totalPieChart">
+
+                </div>
+          </div>
+          <div class = "row">
+                <div class="column" style="margin-left: 40px;">
+                    <div style="margin: auto;" id="SalesSanityPieChart">
+
+                    </div>
+                </div>
+                <div class="column">
+                    <div style="margin: auto;" id="CFMSanityPieChart">
+                        
+                    </div>
+                </div>
+                <div class="column">
+                    <div style="margin: auto;" id="SalesRegressionPieChart">
+                        
+                    </div>
+                </div>
+                <div class="column">
+                    <div style="margin: auto;" id="CFMRegressionPieChart">
+                        
+                    </div>
+                </div>
+          </div>
+      </div>
+    </body>
+</html>    
