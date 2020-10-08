@@ -8,7 +8,9 @@ import argparse
 def mergeHandler(args):
     if args.i:
         #C:\\Users\\h.vo\\Downloads\\reports (1)
-        for root,dirs,files in os.walk("./reports/logs/",topdown=True):
+        cwd = os.path.dirname(os.path.abspath(__file__))
+        print(cwd)
+        for root,dirs,files in os.walk(cwd+"/reports/logs/",topdown=True):
             for name in files:
                 if "html" in name:
                     os.remove(os.path.join(root,name))

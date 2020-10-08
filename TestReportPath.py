@@ -18,25 +18,32 @@ from distutils.dir_util import copy_tree
  # ############################################################################################################# 
 class TestReport:
     def __init__(self,inputPath):
+        self.cwd = os.path.dirname(os.path.abspath(__file__))
+        print(self.cwd)
         self.path = inputPath
         self.testSuiteFileArray = []
         self.testSuiteDict = {"RTCFM":[],"RTSales":[],"CFM":[],"Sales":[],"NotExecuted":[]}
         self.crawlingPath(self.path,self.testSuiteDict)
-        self.insertElementToTemplate(self.testSuiteDict["RTCFM"],"./template/CFMRegressionTemplate.html","./reports/logs/CFMRegression.html")
-        self.insertElementToTemplate(self.testSuiteDict["RTSales"],"./template/SalesRegressionTemplate.html","./reports/logs/SalesRegression.html")
-        self.insertElementToTemplate(self.testSuiteDict["CFM"],"./template/CFMSanityTemplate.html","./reports/logs/CFMSanity.html")
-        self.insertElementToTemplate(self.testSuiteDict["Sales"],"./template/SalesSanityTemplate.html","./reports/logs/SalesSanity.html")
-        self.copyChildrenFilesTestSuite(self.testSuiteDict["RTCFM"],"./reports/logs/")
-        self.copyChildrenFilesTestSuite(self.testSuiteDict["RTSales"],"./reports/logs/")
-        self.copyChildrenFilesTestSuite(self.testSuiteDict["CFM"],"./reports/logs/")
-        self.copyChildrenFilesTestSuite(self.testSuiteDict["Sales"],"./reports/logs/")
-        self.copyScreenshotsFolder("./reports/screenshots/")
-        masterSuite = MasterSuite("./template/MasterSuiteTemplate.html",self.testSuiteDict,"./reports/logs/MasterSuite.html")
+        if len(self.testSuiteDict["RTCFM"]) > 0:
+            self.insertElementToTemplate(self.testSuiteDict["RTCFM"],self.cwd+"/template/CFMRegressionTemplate.html",self.cwd+"/reports/logs/CFMRegression.html")
+            self.copyChildrenFilesTestSuite(self.testSuiteDict["RTCFM"],self.cwd+"/reports/logs/")
+        if len(self.testSuiteDict["RTSales"]) > 0:
+            self.insertElementToTemplate(self.testSuiteDict["RTSales"],self.cwd+"/template/SalesRegressionTemplate.html",self.cwd+"/reports/logs/SalesRegression.html")
+            self.copyChildrenFilesTestSuite(self.testSuiteDict["RTSales"],self.cwd+"/reports/logs/")
+        if len(self.testSuiteDict["CFM"]) > 0:
+            self.insertElementToTemplate(self.testSuiteDict["CFM"],self.cwd+"/template/CFMSanityTemplate.html",self.cwd+"/reports/logs/CFMSanity.html")
+            self.copyChildrenFilesTestSuite(self.testSuiteDict["CFM"],self.cwd+"/reports/logs/")
+        if len(self.testSuiteDict["Sales"]) > 0:
+            self.insertElementToTemplate(self.testSuiteDict["Sales"],self.cwd+"/template/SalesSanityTemplate.html",self.cwd+"/reports/logs/SalesSanity.html")
+            self.copyChildrenFilesTestSuite(self.testSuiteDict["Sales"],self.cwd+"/reports/logs/")
+        self.copyScreenshotsFolder(self.cwd+"/reports/screenshots/")
+        masterSuite = MasterSuite(self.cwd+"/template/MasterSuiteTemplate.html",self.testSuiteDict,self.cwd+"/reports/logs/MasterSuite.html")
     #This function crawling the directory of input folder and searching for the file name contains the "Result" in name
     def crawlingPath(self,inputPath,inputTestSuiteDict):
         for root,dirs,files in  os.walk(inputPath,topdown=True):
             for name in files:
                 if "Result" in name:
+                    print(name)
                     #self.testSuiteFileArray.append(os.path.join(root,name))
                     #Instantiate the test suite object represented for the test suite file
                     tempTestSuite = TestSuite(os.path.join(root,name))
@@ -218,10 +225,14 @@ class MasterSuite:
         self.testSetCFMRegressionID = self.soup.find(id="testset4")
         self.totalID = self.soup.find(id="total")
         #Update Data of Test Set rows and Total row
-        self.updateDataTestSet(self.testSetCFMRegressionID,"RTCFM","scriptChartCFMRegression","CFMRegressionPieChart","CFM Regression")
-        self.updateDataTestSet(self.testSetCFMSanityID,"CFM","scriptChartCFMSanity","CFMSanityPieChart","CFM Sanity")
-        self.updateDataTestSet(self.testSetSalesRegressionID,"RTSales","scriptChartSalesRegression","SalesRegressionPieChart","Sales Regression")
-        self.updateDataTestSet(self.testSetSalesSanityID,"Sales","scriptChartSalesSanity","SalesSanityPieChart","Sales Sanity")
+        if len(self.testSuiteDictionary["RTCFM"]) > 0:
+            self.updateDataTestSet(self.testSetCFMRegressionID,"RTCFM","scriptChartCFMRegression","CFMRegressionPieChart","CFM Regression")
+        if len(self.testSuiteDictionary["CFM"]) > 0:
+            self.updateDataTestSet(self.testSetCFMSanityID,"CFM","scriptChartCFMSanity","CFMSanityPieChart","CFM Sanity")
+        if len(self.testSuiteDictionary["RTSales"]) > 0:
+            self.updateDataTestSet(self.testSetSalesRegressionID,"RTSales","scriptChartSalesRegression","SalesRegressionPieChart","Sales Regression")
+        if len(self.testSuiteDictionary["Sales"]) > 0:
+            self.updateDataTestSet(self.testSetSalesSanityID,"Sales","scriptChartSalesSanity","SalesSanityPieChart","Sales Sanity")
         self.updateDataTestSet(self.totalID,"Total","scriptChartTotal","totalPieChart","Total")
         #Write the modified MasterSuite template to the output file
         with open(outputFileName, "w",encoding="utf-8") as file:
