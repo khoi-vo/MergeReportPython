@@ -24,18 +24,33 @@ class TestReport:
         self.testSuiteFileArray = []
         self.testSuiteDict = {"RTCFM":[],"RTSales":[],"CFM":[],"Sales":[],"NotExecuted":[]}
         self.crawlingPath(self.path,self.testSuiteDict)
-        if len(self.testSuiteDict["RTCFM"]) > 0:
-            self.insertElementToTemplate(self.testSuiteDict["RTCFM"],self.cwd+"/template/CFMRegressionTemplate.html",self.cwd+"/reports/logs/CFMRegression.html")
-            self.copyChildrenFilesTestSuite(self.testSuiteDict["RTCFM"],self.cwd+"/reports/logs/")
-        if len(self.testSuiteDict["RTSales"]) > 0:
-            self.insertElementToTemplate(self.testSuiteDict["RTSales"],self.cwd+"/template/SalesRegressionTemplate.html",self.cwd+"/reports/logs/SalesRegression.html")
-            self.copyChildrenFilesTestSuite(self.testSuiteDict["RTSales"],self.cwd+"/reports/logs/")
-        if len(self.testSuiteDict["CFM"]) > 0:
-            self.insertElementToTemplate(self.testSuiteDict["CFM"],self.cwd+"/template/CFMSanityTemplate.html",self.cwd+"/reports/logs/CFMSanity.html")
-            self.copyChildrenFilesTestSuite(self.testSuiteDict["CFM"],self.cwd+"/reports/logs/")
-        if len(self.testSuiteDict["Sales"]) > 0:
-            self.insertElementToTemplate(self.testSuiteDict["Sales"],self.cwd+"/template/SalesSanityTemplate.html",self.cwd+"/reports/logs/SalesSanity.html")
-            self.copyChildrenFilesTestSuite(self.testSuiteDict["Sales"],self.cwd+"/reports/logs/")
+        for element in self.testSuiteDict: 
+            if element == "RTCFM":
+                template = "/template/CFMRegressionTemplate.html"
+                outputFile = "/reports/logs/CFMRegression.html"
+            elif element == "RTSales":
+                template = "/template/SalesRegressionTemplate.html"
+                outputFile = "/reports/logs/SalesRegression.html"
+            elif element == "CFM":
+                template = "/template/CFMSanityTemplate.html"
+                outputFile = "/reports/logs/CFMSanity.html"
+            elif element == "Sales": 
+                template = "/template/SalesSanityTemplate.html"
+                outputFile = "/reports/logs/SalesSanity.html"
+            self.insertElementToTemplate(self.testSuiteDict[element],self.cwd+template,self.cwd+outputFile)
+            self.copyChildrenFilesTestSuite(self.testSuiteDict[element],self.cwd+"/reports/logs/")
+        # if len(self.testSuiteDict["RTCFM"]) > 0:
+        #     self.insertElementToTemplate(self.testSuiteDict["RTCFM"],self.cwd+"/template/CFMRegressionTemplate.html",self.cwd+"/reports/logs/CFMRegression.html")
+        #     self.copyChildrenFilesTestSuite(self.testSuiteDict["RTCFM"],self.cwd+"/reports/logs/")
+        # if len(self.testSuiteDict["RTSales"]) > 0:
+        #     self.insertElementToTemplate(self.testSuiteDict["RTSales"],self.cwd+"/template/SalesRegressionTemplate.html",self.cwd+"/reports/logs/SalesRegression.html")
+        #     self.copyChildrenFilesTestSuite(self.testSuiteDict["RTSales"],self.cwd+"/reports/logs/")
+        # if len(self.testSuiteDict["CFM"]) > 0:
+        #     self.insertElementToTemplate(self.testSuiteDict["CFM"],self.cwd+"/template/CFMSanityTemplate.html",self.cwd+"/reports/logs/CFMSanity.html")
+        #     self.copyChildrenFilesTestSuite(self.testSuiteDict["CFM"],self.cwd+"/reports/logs/")
+        # if len(self.testSuiteDict["Sales"]) > 0:
+        #     self.insertElementToTemplate(self.testSuiteDict["Sales"],self.cwd+"/template/SalesSanityTemplate.html",self.cwd+"/reports/logs/SalesSanity.html")
+        #     self.copyChildrenFilesTestSuite(self.testSuiteDict["Sales"],self.cwd+"/reports/logs/")
         self.copyScreenshotsFolder(self.cwd+"/reports/screenshots/")
         masterSuite = MasterSuite(self.cwd+"/template/MasterSuiteTemplate.html",self.testSuiteDict,self.cwd+"/reports/logs/MasterSuite.html")
     #This function crawling the directory of input folder and searching for the file name contains the "Result" in name
@@ -103,13 +118,14 @@ class TestReport:
         tableHeadsSummary[2].font.string = str(numberOfPass)
         tableHeadsSummary[3].font.string = str(len(inputList)-numberOfPass)
         #Insert Pie Chart under the table of test suite
-        scriptChartString = scriptChartString.replace('passNumber',str(numberOfPass))
-        scriptChartString = scriptChartString.replace('failNumber',str(len(inputList)-numberOfPass))
-        scriptChartTag = soup.find(id="scriptChart")
-        captionTag = soup.find("caption")
-        captionText = captionTag.h1.font.text
-        scriptChartString = scriptChartString.replace('titleName',captionText)
-        scriptChartTag.string=scriptChartString
+        if len(inputList) > 0:
+            scriptChartString = scriptChartString.replace('passNumber',str(numberOfPass))
+            scriptChartString = scriptChartString.replace('failNumber',str(len(inputList)-numberOfPass))
+            scriptChartTag = soup.find(id="scriptChart")
+            captionTag = soup.find("caption")
+            captionText = captionTag.h1.font.text
+            scriptChartString = scriptChartString.replace('titleName',captionText)
+            scriptChartTag.string=scriptChartString
         #Write to the output testsuite file
         with open(outputFileName, "w",encoding="utf-8") as file:
                 file.write(str(soup))
@@ -273,7 +289,8 @@ class MasterSuite:
         percentagePassHTML.string = str(percentagePass)+"%"
         percentageFailHTML.string = str(percentageFail)+"%"
         #insert pie chart
-        self.insertPieChart(titlePieChart,numberOfPass,numberOfFail,scriptChartID,piechartID)
+        if keyDict == "Total":
+            self.insertPieChart(titlePieChart,numberOfPass,numberOfFail,scriptChartID,piechartID)
     #This function will iterate through the value of each keyDict, with each value which is a list contains name of
     #test case, result of test case and href of test case, the number of pass test case is counted if there is a 
     #result of pass. The calculate total number of test case of one test set by calculate length of the value of each
