@@ -14,7 +14,7 @@ def mergeHandler(args):
             for name in files:
                 if "html" in name:
                     os.remove(os.path.join(root,name))
-        testReport = TestReport(args.i)
+        testReport = TestReport(args.i,args.k)
     if args.o:
         reportFolder = "./reports"
         copy_tree(reportFolder,args.o)
@@ -45,6 +45,7 @@ subparsers = parser.add_subparsers()
 mergeParser = subparsers.add_parser("merge")
 mergeParser.add_argument("-i",required=True, metavar='INPUT-DIRECTORY', help="specify input directory")
 mergeParser.add_argument("-o",required=False, metavar='OUTPUT-DIRECTORY', help="specify output directory")
+mergeParser.add_argument("-k",required=False, metavar='KEY-NUMBER', help="specify key number")
 mergeParser.set_defaults(func=mergeHandler)
 
 mergeParser = subparsers.add_parser("update")

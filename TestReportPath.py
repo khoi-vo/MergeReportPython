@@ -2,6 +2,8 @@ import os
 from bs4 import BeautifulSoup
 import shutil
 from distutils.dir_util import copy_tree
+import time
+ts = time.gmtime()
 ###############################################################################################################
  # This Class is responsible for handling multiple of steps of merging the report:
  # Step 1: Getting the directory of input folder, the crawlingPath function is called to crawl each folder
@@ -17,13 +19,14 @@ from distutils.dir_util import copy_tree
  # Step 6: Modify the MasterSuite report by instantiate the masterSuite object
  # ############################################################################################################# 
 class TestReport:
-    def __init__(self,inputPath):
+    def __init__(self,inputPath,inputKeyNumber=None):
         self.cwd = os.path.dirname(os.path.abspath(__file__))
         print(self.cwd)
         self.path = inputPath
         self.testSuiteFileArray = []
         self.testSuiteDict = {"RTCFM":[],"RTSales":[],"CFM":[],"Sales":[],"NotExecuted":[]}
         self.crawlingPath(self.path,self.testSuiteDict)
+        #self.exportTestCaseDescriptionToTextFile(self.testSuiteDict,inputKeyNumber)
         for element in self.testSuiteDict: 
             if element == "RTCFM":
                 template = "/template/CFMRegressionTemplate.html"
@@ -52,7 +55,7 @@ class TestReport:
         #     self.insertElementToTemplate(self.testSuiteDict["Sales"],self.cwd+"/template/SalesSanityTemplate.html",self.cwd+"/reports/logs/SalesSanity.html")
         #     self.copyChildrenFilesTestSuite(self.testSuiteDict["Sales"],self.cwd+"/reports/logs/")
         self.copyScreenshotsFolder(self.cwd+"/reports/screenshots/")
-        masterSuite = MasterSuite(self.cwd+"/template/MasterSuiteTemplate.html",self.testSuiteDict,self.cwd+"/reports/logs/MasterSuite.html")
+        masterSuite = MasterSuite(self.cwd+"/template/MasterSuiteTemplate.html",self.testSuiteDict,self.cwd,inputKeyNumber)
     #This function crawling the directory of input folder and searching for the file name contains the "Result" in name
     def crawlingPath(self,inputPath,inputTestSuiteDict):
         for root,dirs,files in  os.walk(inputPath,topdown=True):
@@ -68,7 +71,11 @@ class TestReport:
                     inputTestSuiteDict["RTSales"].extend(tempTestSuite.RTSalesList)
                     inputTestSuiteDict["Sales"].extend(tempTestSuite.SalesList)
                     #inputTestSuiteDict["NotExecuted"].append(tempTestSuite.NotExecuted) 
-    
+    # def exportTestCaseDescriptionToTextFile(self,inputTestCaseDict,inputKeyNumber):
+    #     with open(self.cwd+"/reports/logs/testCaseFile.txt", 'w') as f:
+    #         for element in inputTestCaseDict:
+    #             for i in range(0,len(inputTestCaseDict[element])):
+    #                 f.write(inputTestCaseDict[element][i][0] + "\t" + inputTestCaseDict[element][i][1] + "\t"+ time.ctime()+ "\t" + str(inputKeyNumber) +"\n")
     #This function is used for inserting the element to the template.
     #This function takes the list element in the dictionary which corresponds to the determined category and retrieves data
     #The function reads the template and modify it and write the output file
@@ -226,7 +233,7 @@ class TestSuite:
  #         outputFileName: name of the desired output file
  # #############################################################################################################    
 class MasterSuite:
-    def __init__(self,inputMasterSuiteTemplate,inputTestSuiteDictionary,outputFileName):
+    def __init__(self,inputMasterSuiteTemplate,inputTestSuiteDictionary,outputPath,inputKeyNumber):
         #Initialize number of total and pass of row TOTAL
         self.total = 0
         self.totalPass = 0
@@ -240,6 +247,8 @@ class MasterSuite:
         self.testSetSalesRegressionID = self.soup.find(id="testset3")
         self.testSetCFMRegressionID = self.soup.find(id="testset4")
         self.totalID = self.soup.find(id="total")
+        self.date = self.soup.find(id="date")
+        self.date.string = time.ctime()
         #Update Data of Test Set rows and Total row
         if len(self.testSuiteDictionary["RTCFM"]) > 0:
             self.updateDataTestSet(self.testSetCFMRegressionID,"RTCFM","scriptChartCFMRegression","CFMRegressionPieChart","CFM Regression")
@@ -250,10 +259,17 @@ class MasterSuite:
         if len(self.testSuiteDictionary["Sales"]) > 0:
             self.updateDataTestSet(self.testSetSalesSanityID,"Sales","scriptChartSalesSanity","SalesSanityPieChart","Sales Sanity")
         self.updateDataTestSet(self.totalID,"Total","scriptChartTotal","totalPieChart","Total")
+        
         #Write the modified MasterSuite template to the output file
-        with open(outputFileName, "w",encoding="utf-8") as file:
+        with open(outputPath+"/reports/logs/MasterSuite.html", "w",encoding="utf-8") as file:
             file.write(str(self.soup))
-
+        self.exportTestCaseDescriptionToTextFile(self.testSuiteDictionary,inputKeyNumber,outputPath)
+    def exportTestCaseDescriptionToTextFile(self,inputTestCaseDict,inputKeyNumber,outputPath):
+        with open(outputPath+"/reports/logs/testCaseFile.txt", 'w') as f:
+            for element in inputTestCaseDict:
+                for i in range(0,len(inputTestCaseDict[element])):
+                    f.write(inputTestCaseDict[element][i][0] + "\t" + inputTestCaseDict[element][i][1] + "\t"+ time.ctime()+ "\t" + str(inputKeyNumber) +"\n")
+            f.write(str(self.total) +"\t" +str(self.totalPass)+"\t" +str(self.total-self.totalPass))
     #This function gathers the html element: numberOfTestCase,numberOfPassTestCase,numberOfFailTest,percentagePass and percentageFail
     # of MasterSuite template. The input keyDict need to be provided in order to distinguish the calculation of row
     # Total and Test Set Row.
